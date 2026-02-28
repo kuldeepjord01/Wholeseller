@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<div class="mb-4">
+    <h1 class="display-5 fw-bold text-primary mb-2"><i class="fas fa-cash-register"></i> Checkout</h1>
+    <p class="text-muted">Complete your purchase</p>
+</div>
+
+{% if error %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle"></i> {{ error }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+{% endif %}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-4"><i class="fas fa-user"></i> Billing Information</h5>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="buyer_name" class="form-label fw-bold">Full Name *</label>
+                        <input type="text" class="form-control form-control-lg" id="buyer_name" name="buyer_name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="buyer_email" class="form-label fw-bold">Email Address *</label>
+                        <input type="email" class="form-control form-control-lg" id="buyer_email" name="buyer_email" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="buyer_phone" class="form-label fw-bold">Phone Number</label>
+                        <input type="tel" class="form-control form-control-lg" id="buyer_phone" name="buyer_phone" placeholder="Optional">
+                    </div>
+                    
+                    <hr>
+                    
+                    <h5 class="mb-3"><i class="fas fa-box"></i> Order Items</h5>
+                    
+                    <div class="table-responsive mb-4">
+                        <table class="table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in products %}
+                                    <tr>
+                                        <td class="fw-bold">{{ item.product.name }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>₹{{ item.product.price }}</td>
+                                        <td class="text-success fw-bold">₹{{ item.subtotal|floatformat:2 }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="alert alert-light border">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Total Amount:</h5>
+                            <h4 class="mb-0 text-success fw-bold">₹{{ total_price|floatformat:2 }}</h4>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success btn-lg w-100">
+                        <i class="fas fa-check-circle"></i> Complete Purchase
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5 class="card-title mb-3"><i class="fas fa-info-circle"></i> Order Details</h5>
+                
+                <p class="text-muted mb-2">
+                    <i class="fas fa-box"></i> <strong>Items:</strong> 
+                    <span class="badge bg-info">{{ products|length }}</span>
+                </p>
+                
+                <p class="text-muted mb-2">
+                    <i class="fas fa-dollar-sign"></i> <strong>Subtotal:</strong> 
+                    <span class="text-dark fw-bold">₹{{ total_price|floatformat:2 }}</span>
+                </p>
+                
+                <p class="text-muted mb-2">
+                    <i class="fas fa-truck"></i> <strong>Shipping:</strong> 
+                    <span class="text-success">FREE</span>
+                </p>
+                
+                <hr>
+                
+                <p class="text-muted mb-3">
+                    <i class="fas fa-shield-alt"></i> Secure payment processing
+                </p>
+                
+                <a href="{% url 'cart' %}" class="btn btn-outline-primary btn-sm w-100">
+                    <i class="fas fa-arrow-left"></i> Back to Cart
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

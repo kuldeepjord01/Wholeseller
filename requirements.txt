@@ -1,0 +1,5 @@
+Django>=6.0
+supabase
+dj-database-url
+psycopg2-binary
+python-dotenv

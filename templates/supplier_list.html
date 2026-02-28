@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Suppliers{% endblock %}
+{% block content %}
+<div class="mb-4">
+    <h1 class="display-5 fw-bold text-primary mb-2"><i class="fas fa-warehouse"></i> Our Suppliers</h1>
+    <p class="text-muted">Connect with our trusted suppliers</p>
+</div>
+
+{% if suppliers %}
+    <div class="row g-4">
+        {% for supplier in suppliers %}
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0 supplier-card transition">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary fw-bold text-truncate">
+                            {{ supplier.name }}
+                        </h5>
+                        
+                        {% if supplier.contact_email %}
+                            <p class="card-text mb-2">
+                                <i class="fas fa-envelope text-muted"></i> 
+                                <a href="mailto:{{ supplier.contact_email }}" class="text-decoration-none">
+                                    {{ supplier.contact_email }}
+                                </a>
+                            </p>
+                        {% endif %}
+                        
+                        <div class="my-3">
+                            <span class="badge bg-info">
+                                <i class="fas fa-cubes"></i> {{ supplier.products.count }} Products
+                            </span>
+                        </div>
+                        
+                        {% if supplier.products.all %}
+                            <div class="alert alert-light border-0 small p-2 mb-0">
+                                <strong>Products:</strong>
+                                <ul class="list-unstyled mb-0 mt-2">
+                                    {% for product in supplier.products.all|slice:":3" %}
+                                        <li class="mb-1">
+                                            <a href="{% url 'product_detail' product.id %}" class="text-decoration-none">
+                                                {{ product.name }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                    {% if supplier.products.count > 3 %}
+                                        <li class="text-muted">
+                                            <small>+{{ supplier.products.count|add:"-3" }} more</small>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        {% else %}
+                            <p class="text-muted small">No products from this supplier yet.</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0">
+                        <a href="/admin/core/supplier/{{ supplier.id }}/change/" class="btn btn-primary btn-sm w-100">
+                            <i class="fas fa-edit"></i> Edit Supplier
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info text-center py-5">
+        <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+        <h5>No Suppliers Yet</h5>
+        <p class="text-muted mb-3">There are no suppliers in the database at the moment.</p>
+        <a href="/admin/core/supplier/add/" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add First Supplier
+        </a>
+    </div>
+{% endif %}
+{% endblock %}

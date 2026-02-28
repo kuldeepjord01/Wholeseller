@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Order Successful{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body py-5">
+                <i class="fas fa-check-circle fa-5x text-success mb-4"></i>
+                
+                <h1 class="display-6 fw-bold mb-3">Order Successful!</h1>
+                
+                <p class="lead text-muted mb-4">
+                    Thank you for your purchase, {{ order.buyer_name }}!
+                </p>
+                
+                <div class="alert alert-light border-2">
+                    <h5 class="mb-3">Order #{{ order.id }}</h5>
+                    <p class="mb-2">
+                        <strong>Buyer:</strong> {{ order.buyer_name }}<br>
+                        <strong>Email:</strong> {{ order.buyer_email }}<br>
+                        {% if order.buyer_phone %}
+                            <strong>Phone:</strong> {{ order.buyer_phone }}<br>
+                        {% endif %}
+                        <strong>Total Amount:</strong> <span class="text-success fw-bold">₹{{ order.total_price|floatformat:2 }}</span>
+                    </p>
+                </div>
+                
+                <h5 class="mb-3 mt-4">Order Items</h5>
+                
+                <div class="table-responsive mb-4">
+                    <table class="table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                                <tr>
+                                    <td class="fw-bold">{{ item.product.name }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td class="text-success fw-bold">₹{{ item.get_subtotal|floatformat:2 }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="alert alert-success">
+                    <i class="fas fa-check"></i> Your stock has been automatically deducted from our inventory
+                </div>
+                
+                <p class="text-muted mb-4">
+                    A confirmation email has been sent to <strong>{{ order.buyer_email }}</strong>
+                </p>
+                
+                <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-shopping-bags"></i> Continue Shopping
+                </a>
+                <a href="{% url 'home' %}" class="btn btn-outline-primary btn-lg ms-2">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

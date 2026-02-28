@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Suplier Dashboard{% endblock %}
+{% block content %}
+<h1 class="mb-4">Suplier Dashboard</h1>
+<p class="text-muted">List of all products (for now).</p>
+{% if products %}
+    <div class="row g-4">
+    {% for product in products %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">₹{{ product.price }}</p>
+                    <p class="card-text small text-muted">Stock: {{ product.stock }}</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% else %}
+    <p>No products available.</p>
+{% endif %}
+{% endblock %}
